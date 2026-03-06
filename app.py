@@ -42,7 +42,8 @@ def transcribe():
 
     try:
         start = time.time()
-        segments, info = model.transcribe(tmp.name, beam_size=5)
+        language = request.form.get("language", "pt")
+        segments, info = model.transcribe(tmp.name, beam_size=5, language=language)
         results = []
         full_text = ""
         for seg in segments:
