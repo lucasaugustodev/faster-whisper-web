@@ -404,8 +404,14 @@ window.speak = async function() {
         mtimes: []
       };
 
-      // Make avatar look at camera during speech
-      audioObj.markers.push(() => { head.lookAtCamera(100); });
+      // Force look at camera during speech + override eye targets
+      audioObj.markers.push(() => {
+        head.lookAtCamera(100);
+        if (head.poseTarget) {
+          head.poseTarget.eyesRotateX = -0.5;
+          head.poseTarget.headRotateX = 0.3;
+        }
+      });
       audioObj.mtimes.push(0);
 
       head.speakAudio(audioObj);
