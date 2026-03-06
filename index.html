@@ -259,28 +259,34 @@ async function loadAvatar(url, body) {
     });
     loading.style.display = 'none';
     avatarReady = true;
-    head.setView("head", { cameraDistance: 0.6, cameraX: 0, cameraY: 0.1, cameraRotateX: 0, cameraRotateY: 0 });
-    head.lookAtCamera(100);
-    head.setAutoRotate(false);
-    // Override the idle eye/head target to always look at camera
-    if (head.poseTarget) {
-      head.poseTarget.headRotateX = 0;
-      head.poseTarget.headRotateY = 0;
-      head.poseTarget.eyesRotateX = 0;
-      head.poseTarget.eyesRotateY = 0;
-    }
-    // Keep forcing lookAtCamera
-    setInterval(() => {
-      if (avatarReady && head) {
-        head.lookAtCamera(500);
-        if (head.poseTarget) {
-          head.poseTarget.headRotateX = 0;
-          head.poseTarget.headRotateY = 0;
-          head.poseTarget.eyesRotateX = 0;
-          head.poseTarget.eyesRotateY = 0;
+    head.setView("head", { cameraDistance: 0.6, cameraX: 0, cameraY: 0, cameraRotateX: 0, cameraRotateY: 0 });
+
+    // Override idle/speaking animation templates to prevent looking down
+    function patchAnimTemplates(tmpl) {
+      if (!tmpl || !tmpl.alt) return;
+      tmpl.alt.forEach(a => {
+        if (a.vs) {
+          if (a.vs.eyesRotateX) a.vs.eyesRotateX = [[0, 0]];
+          if (a.vs.eyesRotateY) a.vs.eyesRotateY = [[0, 0]];
         }
-      }
-    }, 300);
+      });
+    }
+    if (head.animTemplateIdle) patchAnimTemplates(head.animTemplateIdle);
+    if (head.animTemplateSpeaking) patchAnimTemplates(head.animTemplateSpeaking);
+
+    // Also patch pose templates
+    if (head.poseTemplates) {
+      Object.values(head.poseTemplates).forEach(p => {
+        if (p.props) {
+          p.props.eyesRotateX = 0;
+          p.props.eyesRotateY = 0;
+          p.props.headRotateX = 0;
+        }
+      });
+    }
+
+    head.lookAtCamera(100);
+    setInterval(() => { if (avatarReady && head) head.lookAtCamera(500); }, 1000);
   } catch (err) {
     console.error("Avatar error:", err);
     loading.textContent = "Erro: " + err.message;
