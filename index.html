@@ -256,6 +256,8 @@ async function loadAvatar(url, body) {
     });
     loading.style.display = 'none';
     avatarReady = true;
+    head.setView("head", { cameraDistance: 0.6, cameraX: 0, cameraY: 0, cameraRotateX: 0, cameraRotateY: 0 });
+    head.lookAtCamera(100);
   } catch (err) {
     console.error("Avatar error:", err);
     loading.textContent = "Erro: " + err.message;
