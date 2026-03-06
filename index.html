@@ -121,6 +121,15 @@
   .tts-card .tts-meta { font-size: 11px; color: #666; margin-bottom: 8px; }
   .tts-card audio { width: 100%; height: 32px; }
 
+  .avatar-picker {
+    display: flex; gap: 8px; margin-top: 8px;
+  }
+  .avatar-picker select {
+    flex: 1; background: #1a1a1a; border: 1px solid #333; color: #e0e0e0;
+    padding: 7px 8px; border-radius: 6px; font-size: 12px;
+  }
+  .avatar-picker select:focus { outline: none; border-color: #4fc3f7; }
+
   @media (max-width: 800px) {
     .tts-layout { flex-direction: column-reverse; }
     .tts-right { width: 100%; }
