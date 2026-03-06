@@ -175,6 +175,21 @@
       <div id="avatarContainer">
         <div id="avatarLoading">Carregando avatar...</div>
       </div>
+      <div class="avatar-picker">
+        <select id="avatarSelect" onchange="window.changeAvatar(this.value)">
+          <option value="/avatars/brunette.glb">Brunette (RPM)</option>
+          <option value="/avatars/brunette-t.glb">Brunette T-Pose</option>
+          <option value="/avatars/avaturn.glb">Avaturn</option>
+          <option value="/avatars/avatarsdk.glb">AvatarSDK</option>
+          <option value="/avatars/avatar.glb">MPFB</option>
+          <option value="custom">Upload GLB...</option>
+        </select>
+        <input type="file" id="glbUpload" accept=".glb" style="display:none" onchange="window.uploadAvatar(this)">
+        <select id="bodyType" onchange="window.changeAvatar(document.getElementById('avatarSelect').value)">
+          <option value="F">Corpo F</option>
+          <option value="M">Corpo M</option>
+        </select>
+      </div>
     </div>
   </div>
 </div>
