@@ -351,11 +351,9 @@ window.speak = async function() {
         mtimes: []
       };
 
-      // Make avatar look at camera and gesture
-      if (data.words.length > 3) {
-        audioObj.markers.push(() => { head.lookAtCamera(500); head.speakWithHands(); });
-        audioObj.mtimes.push(0);
-      }
+      // Make avatar look at camera during speech
+      audioObj.markers.push(() => { head.lookAtCamera(100); });
+      audioObj.mtimes.push(0);
 
       head.speakAudio(audioObj);
       statusEl.textContent = 'Avatar falando!';
