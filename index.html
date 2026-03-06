@@ -217,6 +217,9 @@ async function initAvatar() {
     head = new TalkingHead(container, {
       lipsyncModules: ["en", "fi"],
       cameraView: "head",
+      cameraRotateEnable: false,
+      cameraPanEnable: false,
+      cameraZoomEnable: false,
       modelFPS: 30
     });
 
