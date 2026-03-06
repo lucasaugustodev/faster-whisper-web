@@ -122,6 +122,16 @@ def tts():
     finally:
         os.unlink(tmp.name)
 
+@app.route("/upload-avatar", methods=["POST"])
+def upload_avatar():
+    if "avatar" not in request.files:
+        return jsonify({"error": "Nenhum arquivo enviado"}), 400
+    f = request.files["avatar"]
+    filename = f.filename.replace(" ", "_")
+    path = os.path.join("avatars", filename)
+    f.save(path)
+    return jsonify({"url": "/avatars/" + filename})
+
 @app.route("/voices")
 def voices():
     async def get_voices():
