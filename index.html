@@ -258,6 +258,8 @@ async function loadAvatar(url, body) {
     avatarReady = true;
     head.setView("head", { cameraDistance: 0.6, cameraX: 0, cameraY: 0, cameraRotateX: 0, cameraRotateY: 0 });
     head.lookAtCamera(100);
+    // Keep avatar looking at camera continuously
+    setInterval(() => { if (avatarReady && head) head.lookAtCamera(1000); }, 2000);
   } catch (err) {
     console.error("Avatar error:", err);
     loading.textContent = "Erro: " + err.message;
