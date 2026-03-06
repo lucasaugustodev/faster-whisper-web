@@ -248,7 +248,7 @@ async function loadAvatar(url, body) {
       body: body || 'F',
       avatarMood: 'neutral',
       lipsyncLang: 'en',
-      baseline: { headRotateX: 0.15, eyesRotateX: 0.3 }
+      baseline: { headRotateX: 0 }
     }, (ev) => {
       if (ev.lengthComputable) {
         let pct = Math.min(100, Math.round(ev.loaded / ev.total * 100));
