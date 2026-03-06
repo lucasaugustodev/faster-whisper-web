@@ -408,8 +408,8 @@ window.speak = async function() {
       audioObj.markers.push(() => {
         head.lookAtCamera(100);
         if (head.poseTarget) {
-          head.poseTarget.eyesRotateX = -0.5;
-          head.poseTarget.headRotateX = 0.3;
+          head.poseTarget.eyesRotateX = 0.5;
+          head.poseTarget.headRotateX = -0.3;
         }
       });
       audioObj.mtimes.push(0);
