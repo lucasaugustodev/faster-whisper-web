@@ -220,20 +220,7 @@ async function initAvatar() {
       modelFPS: 30
     });
 
-    await head.showAvatar({
-      url: '/avatars/avatar.glb',
-      body: 'M',
-      avatarMood: 'neutral',
-      lipsyncLang: 'en'
-    }, (ev) => {
-      if (ev.lengthComputable) {
-        let pct = Math.min(100, Math.round(ev.loaded / ev.total * 100));
-        loading.textContent = "Carregando avatar " + pct + "%";
-      }
-    });
-
-    loading.style.display = 'none';
-    avatarReady = true;
+    await loadAvatar('/avatars/avaturn.glb', 'F');
 
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") head.start();
@@ -245,6 +232,69 @@ async function initAvatar() {
     loading.textContent = "Erro: " + err.message;
   }
 }
+
+async function loadAvatar(url, body) {
+  const loading = document.getElementById('avatarLoading');
+  loading.style.display = 'block';
+  loading.textContent = 'Carregando avatar...';
+  avatarReady = false;
+
+  try {
+    await head.showAvatar({
+      url: url,
+      body: body || 'F',
+      avatarMood: 'neutral',
+      lipsyncLang: 'en'
+    }, (ev) => {
+      if (ev.lengthComputable) {
+        let pct = Math.min(100, Math.round(ev.loaded / ev.total * 100));
+        loading.textContent = "Carregando avatar " + pct + "%";
+      }
+    });
+    loading.style.display = 'none';
+    avatarReady = true;
+  } catch (err) {
+    console.error("Avatar error:", err);
+    loading.textContent = "Erro: " + err.message;
+  }
+}
+
+window.changeAvatar = async function(value) {
+  if (value === 'custom') {
+    document.getElementById('glbUpload').click();
+    return;
+  }
+  if (!head) return;
+  const body = document.getElementById('bodyType').value;
+  await loadAvatar(value, body);
+};
+
+window.uploadAvatar = async function(input) {
+  if (!input.files.length || !head) return;
+  const file = input.files[0];
+
+  // Upload to server
+  const fd = new FormData();
+  fd.append('avatar', file);
+  try {
+    const resp = await fetch('/upload-avatar', { method: 'POST', body: fd });
+    const data = await resp.json();
+    if (data.url) {
+      const body = document.getElementById('bodyType').value;
+      await loadAvatar(data.url, body);
+      // Add to select
+      const select = document.getElementById('avatarSelect');
+      const opt = document.createElement('option');
+      opt.value = data.url;
+      opt.textContent = file.name;
+      opt.selected = true;
+      select.insertBefore(opt, select.lastElementChild);
+    }
+  } catch (err) {
+    document.getElementById('avatarLoading').textContent = 'Erro upload: ' + err.message;
+  }
+  input.value = '';
+};
 
 // TTS with avatar lip-sync
 window.speak = async function() {
